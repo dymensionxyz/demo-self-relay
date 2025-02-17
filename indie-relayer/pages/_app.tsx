@@ -148,7 +148,7 @@ const customChains: Chain[] = [
     apis: {
       rpc: [
         {
-          address: "http://34.80.93.133:26657",
+          address: "https://dymension-mainnet.blastapi.io:443",
           provider: "Stargaze Foundation",
         },
       ],
@@ -173,6 +173,84 @@ const customChains: Chain[] = [
       },
     ],
   },
+  {
+    $schema: "../../chain.schema.json",
+    chain_name: "mandemainnet",
+    status: "live",
+    network_type: "mainnet",
+    website: "https://stargaze.zone/",
+    pretty_name: "Mande mainnet",
+    chain_id: "mande_18071918-1",
+    bech32_prefix: "mande",
+    daemon_name: "starsd",
+    node_home: "$HOME/.starsd",
+    slip44: 118,
+    fees: {
+      fee_tokens: [
+        {
+          denom: "amande",
+          low_gas_price: 0.03,
+          average_gas_price: 0.04,
+          high_gas_price: 0.05,
+        },
+      ],
+    },
+    codebase: {
+      git_repo: "https://github.com/public-awesome/stargaze",
+      recommended_version: "v7.0.0",
+      compatible_versions: ["v7.0.0"],
+      cosmos_sdk_version: "0.45",
+      tendermint_version: "0.34",
+      cosmwasm_version: "0.28",
+      cosmwasm_enabled: true,
+      genesis: {
+        genesis_url:
+            "https://github.com/public-awesome/testnets/blob/main/elgafar-1/genesis/genesis.tar.gz",
+      },
+    },
+    peers: {
+      seeds: [],
+      persistent_peers: [
+        {
+          id: "e31886cba90a06e165b0df18cc5c8ae015ecd23e",
+          address: "209.159.152.82:26656",
+          provider: "stargaze",
+        },
+        {
+          id: "de00d2d65594b672469ecd65826a94ec1be80b9f",
+          address: "208.73.205.226:26656",
+          provider: "stargaze",
+        },
+      ],
+    },
+    apis: {
+      rpc: [
+        {
+          address: "https://mande-mainnet-tendermint.public.blastapi.io:443",
+          provider: "Stargaze Foundation",
+        },
+      ],
+      rest: [
+        {
+          address: "https://mande-mainnet-rest.public.blastapi.io",
+          provider: "Stargaze Foundation",
+        },
+      ],
+      grpc: [
+        {
+          address: "https://mande-mainnet.public.blastapi.io",
+          provider: "Stargaze Foundation",
+        },
+      ],
+    },
+    explorers: [
+      {
+        kind: "ping.pub",
+        url: "https://gon.ping.pub/iris",
+        tx_page: "https://gon.ping.pub/iris/tx/${txHash}",
+      },
+    ],
+  }
 ];
 
 console.log(chains.find((c) => c.chain_name == "stargazetestnet"));
