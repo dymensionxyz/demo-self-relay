@@ -69,15 +69,6 @@ const link = await Link.createWithExistingConnections(
     connB,
 );
 
-{
-    let packets = await link.getPendingPackets("A");
-    let acks = await link.relayPackets("A", packets);
-    await link.relayAcks("A", acks);
-
-    // if necessary:
-    let h = await link.endA.client.tm.status().then(s => s.syncInfo.latestBlockHeight);
-    await link.timeoutPackets("A", packets.filter(p => isTimedOut(p.packet, h)));
-}
 
 async function sendPackets(link: Link, packets: PacketWithMetadata[]){
     let h = await link.endA.client.tm.status().then(s => s.syncInfo.latestBlockHeight);
@@ -90,4 +81,17 @@ async function sendPackets(link: Link, packets: PacketWithMetadata[]){
 function isTimedOut(p :Packet, dstHeight: number){
     let now = Date.now(); // convert to appropriate representation
     return p.timeoutTimestamp > now || dstHeight > p.timeoutHeight.revisionHeight
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////
+
+{
+    let packets = await link.getPendingPackets("A");
+    let acks = await link.relayPackets("A", packets);
+    await link.relayAcks("A", acks);
+
+    // if necessary:
+    let h = await link.endA.client.tm.status().then(s => s.syncInfo.latestBlockHeight);
+    await link.timeoutPackets("A", packets.filter(p => isTimedOut(p.packet, h)));
 }
