@@ -4,6 +4,7 @@ import {OfflineSigner} from "@cosmjs/proto-signing";
 import {GasPrice} from "@cosmjs/stargate";
 import {Decimal} from "@cosmjs/math";
 import {Packet} from "cosmjs-types/ibc/core/channel/v1/channel";
+import {PacketWithMetadata} from "@confio/relayer/build/lib/endpoint";
 
 const rpcA = "https://rpc-juno-ia.cosmosia.notional.ventures:443";
 const rpcB = "https://rpc-osmosis-ia.cosmosia.notional.ventures:443";
@@ -76,6 +77,14 @@ const link = await Link.createWithExistingConnections(
     // if necessary:
     let h = await link.endA.client.tm.status().then(s => s.syncInfo.latestBlockHeight);
     await link.timeoutPackets("A", packets.filter(p => isTimedOut(p.packet, h)));
+}
+
+async function sendPackets(link: Link, packets: PacketWithMetadata[]){
+    let h = await link.endA.client.tm.status().then(s => s.syncInfo.latestBlockHeight);
+    let [timedOut, ok] = partition(packets, p => isTimedOut(p.packet, h));
+    await link.timeoutPackets("A", timedOut);
+    let acks = await link.relayPackets("A", packets);
+    await link.relayAcks("A", acks);
 }
 
 function isTimedOut(p :Packet, dstHeight: number){
